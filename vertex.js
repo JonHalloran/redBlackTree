@@ -7,6 +7,10 @@ class Vertex {
     this.right = undefined;
   }
 
+  get isRoot() {
+    return this.parent === undefined;
+  }
+
   get isRightChild() {
     return this.parent
       ? this.parent < self
@@ -31,6 +35,20 @@ class Vertex {
     return this.right && this.left;
   }
 
+  leftRotate() {
+    this.isRightChild()
+      ? this.parent.right = this.right
+      : this.parent.left = this.right
+    this.right = this.right.left
+  }
+
+  rightRotate() {
+    this.isRightChild()
+      ? this.parent.right = this.left
+      : this.parent.left = this.left
+    this.left = this.left.right
+  }
+
   addVertex(value) {
     if (value < this.value) {
       this.left
@@ -46,5 +64,47 @@ class Vertex {
         : this.right = Vertex.new(this, value);
     }
   }
+
+  checkRed() {
+    if (this.isRoot()) {
+      // Case 0
+      this.color = "BLACK"
+    } else if (this.parent.color === "RED") {
+      if (this.uncle().color === "RED") {
+        this.caseOne()
+      } else if (this.uncle().color === "BLACK") {
+        const rightLine = this.isRightChild() && this
+          .parent
+          .isRightChild();
+        const leftLine = !this.siRightChild() && !this
+          .parent
+          .isRightChild();
+        if (rightLine || leftLine) {
+          this.caseTwo();
+        }
+      }
+    }
+  }
+
+  caseOne() {
+    this
+      .grandparent()
+      .color() = "RED"
+    this
+      .uncle()
+      .color() = "BLACK"
+    this.parent.color = "BLACK"
+    this
+      .grandparent()
+      .checkRed()
+  }
+
+  caseTwo() {
+    if (this.parent.isRightChild) {
+      this.grandparent.right = this
+      this.
+    }
+  }
+
 }
 export default Vertex;
