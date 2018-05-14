@@ -15,6 +15,16 @@ class binaryTree {
         .root
         .addVertex(value);
     }
+    this.printNodes();
   }
 
+  printNodes(node = this.root) {
+    console.log(node);
+    if (node.left) {
+      this.printNodes(node.left);
+    }
+    if (node.right) {
+      this.printNodes(node.right);
+    }
+  }
 }

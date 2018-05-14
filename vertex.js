@@ -39,13 +39,18 @@ class Vertex {
     this.isRightChild()
       ? this.parent.right = this.right
       : this.parent.left = this.right
+    this.right.parent = this.parent
+    this.parent = this.right
     this.right = this.right.left
+
   }
 
   rightRotate() {
     this.isRightChild()
       ? this.parent.right = this.left
       : this.parent.left = this.left
+    this.left.parent = this.parent
+    this.parent = this.left
     this.left = this.left.right
   }
 
@@ -80,13 +85,14 @@ class Vertex {
           .parent
           .isRightChild();
         if (rightLine || leftLine) {
-          this.caseTwo();
+          this.caseThree();
         }
       }
     }
   }
 
   caseOne() {
+    // recolor only
     this
       .grandparent()
       .color() = "RED"
@@ -100,10 +106,31 @@ class Vertex {
   }
 
   caseTwo() {
-    if (this.parent.isRightChild) {
-      this.grandparent.right = this
-      this.
+    if (this.isRightChild()) {
+      this
+        .parent
+        .leftRotate()
+    } else {
+      this
+        .parent
+        .rightRotate()
     }
+  }
+
+  caseThree() {
+    if (this.parent.isRightChild) {
+      this
+        .grandparent()
+        .rightRotate()
+    } else {
+      this
+        .grandparent()
+        .leftRotate()
+    }
+
+    this.color = "BLACK"
+    this.left.color = "RED"
+    this.right.color = "RED"
   }
 
 }
