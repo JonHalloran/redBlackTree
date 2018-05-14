@@ -1,3 +1,9 @@
+import BinaryTree from "./binaryTree";
+
+let tree = new BinaryTree();
+tree.addVertex(50);
+tree.addVertex(50);
+tree.addVertex(50);
 let height = 480;
 let width = 640;
 let data = [32];
@@ -24,9 +30,11 @@ let makeData = () => {
 
 let button = document.getElementsByClassName('data')[0];
 button.addEventListener("click", () => {
-  data.push(Math.floor(Math.random(100) * 100));
-  console.log(data);
-  makeData();
+  let value = Math.floor(Math.random(100) * 100);
+  console.log("newValue", value);
+  tree.addVertex(value);
+  // data.push(Math.floor(Math.random(100) * 100)); console.log(data); makeData();
+
 });
 
 console.log('test');

@@ -1,15 +1,18 @@
 import Vertex from './vertex';
 
-class binaryTree {
+class BinaryTree {
   constructor() {
-    this.root;
-    this.left;
-    this.right;
+    this.root = undefined;
+    this.left = undefined;
+    this.right = undefined;
   }
 
   addVertex(value) {
     if (!this.root) {
-      this.root = Vertex.new(value);
+      this.root = new Vertex(undefined, value);
+      this
+        .root
+        .checkRed();
     } else {
       this
         .root
@@ -28,3 +31,5 @@ class binaryTree {
     }
   }
 }
+
+export default BinaryTree;

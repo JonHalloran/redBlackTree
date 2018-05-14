@@ -1,19 +1,22 @@
 class Vertex {
   constructor(parent, value) {
+    console.log("parent", parent);
     this.parent = parent;
     this.value = value;
     this.color = "RED";
     this.left = undefined;
     this.right = undefined;
-  }
-
+    if (this.parent) 
+      console.log("preRed", this.parent.left);
+    }
+  
   get isRoot() {
     return this.parent === undefined;
   }
 
   get isRightChild() {
     return this.parent
-      ? this.parent < self
+      ? this.parent.value < this.value
       : false;
   }
 
@@ -25,7 +28,7 @@ class Vertex {
 
   get uncle() {
     return this.grandparent
-      ? (this.parent.isRightChild()
+      ? (this.parent.isRightChild
         ? this.grandparent.left
         : this.grandparent.right)
       : undefined;
@@ -36,101 +39,132 @@ class Vertex {
   }
 
   leftRotate() {
-    this.isRightChild()
-      ? this.parent.right = this.right
-      : this.parent.left = this.right
-    this.right.parent = this.parent
-    this.parent = this.right
-    this.right = this.right.left
+    console.log("leftRotate", this);
+    if (this.parent) {
+      this.isRightChild
+        ? this.parent.right = this.right
+        : this.parent.left = this.right;
+    }
+    this.right.parent = this.parent;
+    this.parent = this.right;
+    this.right = this.parent.left;
+    this.parent.left = this;
+    if (this.right) 
+      this.right.parent = this;
 
-  }
-
+    }
+  
   rightRotate() {
-    this.isRightChild()
-      ? this.parent.right = this.left
-      : this.parent.left = this.left
-    this.left.parent = this.parent
-    this.parent = this.left
-    this.left = this.left.right
-  }
+    console.log("rightRotate", this);
+    if (this.parent) {
+      this.isRightChild
+        ? this.parent.right = this.left
+        : this.parent.left = this.left;
+    }
+    this.left.parent = this.parent;
+    this.parent = this.left;
+    this.left = this.parent.right;
+    this.parent.right = this;
+    if (this.left) 
+      this.left.parent = this;
 
+    }
+  
   addVertex(value) {
     if (value < this.value) {
-      this.left
-        ? this
+      if (this.left) {
+        this
           .left
-          .addVertex(value)
-        : this.left = Vertex.new(this, value);
+          .addVertex(value);
+      } else {
+        this.left = new Vertex(this, value);
+        this
+          .left
+          .checkRed();
+      }
+
     } else {
-      this.right
-        ? this
+      if (this.right) {
+        this
           .right
-          .addVertex(value)
-        : this.right = Vertex.new(this, value);
+          .addVertex(value);
+      } else {
+        this.right = new Vertex(this, value);
+        this
+          .right
+          .checkRed();
+      }
     }
   }
 
   checkRed() {
-    if (this.isRoot()) {
+    console.log("checkRed", this.isRoot);
+    if (this.isRoot) {
       // Case 0
-      this.color = "BLACK"
+      this.color = "BLACK";
     } else if (this.parent.color === "RED") {
-      if (this.uncle().color === "RED") {
-        this.caseOne()
-      } else if (this.uncle().color === "BLACK") {
-        const rightLine = this.isRightChild() && this
-          .parent
-          .isRightChild();
-        const leftLine = !this.siRightChild() && !this
-          .parent
-          .isRightChild();
+      console.log(this.uncle, "uncle");
+      if (this.uncle && this.uncle.color === "RED") {
+        this.caseOne();
+      } else {
+        const rightLine = this.isRightChild && this.parent.isRightChild;
+        const leftLine = !this.isRightChild && !this.parent.isRightChild;
+        console.log(leftLine, rightLine);
         if (rightLine || leftLine) {
           this.caseThree();
+        } else {
+          this.caseTwo();
         }
       }
     }
   }
 
   caseOne() {
+    console.log("CaseOne");
     // recolor only
+    this.grandparent.color = "RED";
+    this.uncle.color = "BLACK";
+    console.log("uncle ", this.uncle);
+    this.parent.color = "BLACK";
     this
-      .grandparent()
-      .color() = "RED"
-    this
-      .uncle()
-      .color() = "BLACK"
-    this.parent.color = "BLACK"
-    this
-      .grandparent()
-      .checkRed()
+      .grandparent
+      .checkRed();
   }
 
   caseTwo() {
-    if (this.isRightChild()) {
+    console.log("caseTwo");
+    if (this.isRightChild) {
       this
         .parent
-        .leftRotate()
+        .leftRotate();
+      this
+        .left
+        .checkRed();
     } else {
       this
         .parent
-        .rightRotate()
+        .rightRotate();
+      this
+        .right
+        .checkRed();
     }
   }
 
   caseThree() {
+    console.log("caseThree");
     if (this.parent.isRightChild) {
       this
-        .grandparent()
-        .rightRotate()
+        .grandparent
+        .leftRotate();
     } else {
       this
-        .grandparent()
-        .leftRotate()
+        .grandparent
+        .rightRotate();
     }
 
-    this.color = "BLACK"
-    this.left.color = "RED"
-    this.right.color = "RED"
+    this.parent.color = "BLACK";
+    this.parent.left.color = "RED";
+    this.parent.right.color = "RED";
   }
 
 }
