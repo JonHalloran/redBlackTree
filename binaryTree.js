@@ -1,18 +1,20 @@
-import Vertex from './vertex'
+import Vertex from './vertex';
 
 class binaryTree {
   constructor() {
     this.root;
     this.left;
-    this.right
+    this.right;
   }
 
-  addVertex(value, vertex = this.root) {
+  addVertex(value) {
     if (!this.root) {
       this.root = Vertex.new(value);
-    } else if (vertex.value > value) {
-      vertex.left
-        ? addVertex(value, vertex.left)
+    } else {
+      this
+        .root
+        .addVertex(value);
     }
   }
+
 }

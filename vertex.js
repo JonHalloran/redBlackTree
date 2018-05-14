@@ -3,8 +3,32 @@ class Vertex {
     this.parent = parent;
     this.value = value;
     this.color = "RED";
-    this.left;
-    this.right;
+    this.left = undefined;
+    this.right = undefined;
+  }
+
+  get isRightChild() {
+    return this.parent
+      ? this.parent < self
+      : false;
+  }
+
+  get grandparent() {
+    return this.parent
+      ? this.parent.parent
+      : undefined;
+  }
+
+  get uncle() {
+    return this.grandparent
+      ? (this.parent.isRightChild()
+        ? this.grandparent.left
+        : this.grandparent.right)
+      : undefined;
+  }
+
+  get isLeaf() {
+    return this.right && this.left;
   }
 
   addVertex(value) {
