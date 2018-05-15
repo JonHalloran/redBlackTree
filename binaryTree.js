@@ -18,17 +18,33 @@ class BinaryTree {
         .root
         .addVertex(value);
     }
-    this.printNodes();
+    this.newRoot(this.root);
   }
 
-  printNodes(node = this.root) {
-    console.log(node);
-    if (node.left) {
-      this.printNodes(node.left);
+  newRoot(node) {
+    if (node.parent) {
+      this.root = node.parent;
+      this.newRoot(this.root);
     }
-    if (node.right) {
-      this.printNodes(node.right);
-    }
+  }
+
+  printNodes(node) {
+    console.log("node", node && node.value);
+    if (node === undefined) 
+      return undefined;
+    let jason = {
+      value: node.value,
+      color: node.color
+    };
+    if (node.left || node.right) {
+      console.log("test", node);
+      jason["children"] = [];
+      if (node.left) 
+        jason["children"].push(this.printNodes(node.left));
+      if (node.right) 
+        jason["children"].push(this.printNodes(node.right));
+      }
+    return jason;
   }
 }
 
