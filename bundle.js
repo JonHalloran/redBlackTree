@@ -80,71 +80,59 @@ tree2.addVertex(51);
 tree2.addVertex(52);
 let treeData = tree2.printNodes(tree2.root);
 console.log(treeData);
+let data = [1, 2, 3, 4, 5];
 
-var svg = Object(__WEBPACK_IMPORTED_MODULE_1_d3__["b" /* select */])("svg"),
-  width = Number(svg.attr("width")),
-  height = Number(svg.attr("height")),
-  g = svg
-    .append("g")
-    .attr("transform", "translate(40,0)");
+let treeRoot = Object(__WEBPACK_IMPORTED_MODULE_1_d3__["a" /* hierarchy */])(treeData);
+console.log(treeRoot);
 
-let binTree = new __WEBPACK_IMPORTED_MODULE_1_d3__["c" /* tree */](treeData).size([1000, 1000]);
-console.log(binTree);
+let toRender = makeData(treeRoot);
+console.log(toRender);
 
-var root = Object(__WEBPACK_IMPORTED_MODULE_1_d3__["a" /* hierarchy */])(treeData);
-Object(__WEBPACK_IMPORTED_MODULE_1_d3__["c" /* tree */])(root);
+let svg = Object(__WEBPACK_IMPORTED_MODULE_1_d3__["b" /* select */])("body")
+  .append("svg")
+  .attr("width", 1000)
+  .attr("height", 1000);
 
-var link = g
-  .selectAll(".link")
-  .data(root.descendants().slice(1))
-  .enter()
-  .append("path")
-  .attr("class", "link")
-  .attr("d", function (d) {
-    return "M" + d.y + "," + d.x + "C" + (d.parent.y + 100) + "," + d.x + " " + (d.parent.y + 100) + "," + d.parent.x + " " + d.parent.y + "," + d.parent.x;
-  });
+let elem = svg
+  .selectAll("g myCircleText")
+  .data(toRender);
 
-var node = g
-  .selectAll(".node")
-  .data(root.descendants())
+let elemEnter = elem
   .enter()
   .append("g")
-  .attr("class", function (d) {
-    return "node" + (d.children
-      ? " node--internal"
-      : " node--leaf");
-  })
   .attr("transform", function (d) {
-    return "translate(" + d.y + "," + d.x + ")";
+    console.log(d);
+    return "translate(" + 1000 / ((d[1] + 1) * 2) + "," + (80 + (d[1] * 80)) + ")";
   });
 
-node
+let circle = elemEnter
   .append("circle")
-  .attr("r", 2.5);
+  .attr("r", 20)
+  .attr("stroke", (d) => d[2])
+  .attr("fill", (d) => d[2]);
 
-node
-  .append("text")
-  .attr("dy", 3)
-  .attr("x", function (d) {
-    return d.children
-      ? -8
-      : 8;
-  })
-  .style("text-anchor", function (d) {
-    return d.children
-      ? "end"
-      : "start";
-  })
-  .text(function (d) {
-    return d.data.name;
-  });
+function makeData(node) {
+  let toMake = [];
+  let out = [];
+  toMake.push(node);
+  while (toMake.length > 0) {
+    let element = toMake.shift();
+    console.log("element", element);
+    for (let child in element.children) {
+      toMake.push(element.children[child]);
+    }
+    out.push([element.value, element.depth, element.data.color]);
+    console.log("makeData", element);
+  }
+  return out;
+}
 
 let button = document.getElementsByClassName('data')[0];
 button.addEventListener("click", () => {
   let value = Math.floor(Math.random(100) * 100);
   console.log("newValue", value);
   tree2.addVertex(value);
-  treeData = tree2.printNodes(tree2.root);
+  treeData = [tree2.printNodes(tree2.root)];
   console.log(treeData);
 });
 
@@ -9804,7 +9792,6 @@ function transform(node) {
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14_d3_hierarchy__ = __webpack_require__(355);
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_14_d3_hierarchy__["a"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_14_d3_hierarchy__["b"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15_d3_interpolate__ = __webpack_require__(8);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_d3_path__ = __webpack_require__(16);
@@ -17741,7 +17728,7 @@ transverseMercatorRaw.invert = function(x, y) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__src_stratify__ = __webpack_require__(371);
 /* unused harmony reexport stratify */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__src_tree__ = __webpack_require__(372);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_7__src_tree__["a"]; });
+/* unused harmony reexport tree */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__src_treemap_index__ = __webpack_require__(373);
 /* unused harmony reexport treemap */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__src_treemap_binary__ = __webpack_require__(374);
@@ -18429,7 +18416,7 @@ function treeRoot(root) {
 }
 
 // Node-link tree diagram using the Reingold-Tilford "tidy" algorithm
-/* harmony default export */ __webpack_exports__["a"] = (function() {
+/* unused harmony default export */ var _unused_webpack_default_export = (function() {
   var separation = defaultSeparation,
       dx = 1,
       dy = 1,
