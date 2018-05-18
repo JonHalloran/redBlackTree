@@ -1,5 +1,14 @@
 import Vertex from './vertex';
 
+const blankNode = {
+  text: {
+    val: ''
+  },
+  connectors: {
+    opacity: 1,
+    "fill-opacity": 1
+  }
+};
 class BinaryTree {
   constructor() {
     this.root = undefined;
@@ -33,17 +42,26 @@ class BinaryTree {
     if (node === undefined) 
       return undefined;
     let jason = {
-      value: node.value,
-      color: node.color
+      text: {
+        val: node.value
+      },
+      HTMLclass: node.color
+      // innerHTML: node.value
     };
     if (node.left || node.right) {
-      console.log("test", node);
       jason["children"] = [];
-      if (node.left) 
+      if (node.left) {
         jason["children"].push(this.printNodes(node.left));
-      if (node.right) 
-        jason["children"].push(this.printNodes(node.right));
+      } else {
+        jason["children"].push(blankNode);
       }
+
+      if (node.right) {
+        jason["children"].push(this.printNodes(node.right));
+      } else {
+        jason["children"].push(blankNode);
+      }
+    }
     return jason;
   }
 }

@@ -45,7 +45,8 @@ class Vertex {
         ? this.parent.right = this.right
         : this.parent.left = this.right;
     }
-    this.right.parent = this.parent;
+    if (this.right) 
+      this.right.parent = this.parent;
     this.parent = this.right;
     this.right = this.parent.left;
     this.parent.left = this;
@@ -61,7 +62,8 @@ class Vertex {
         ? this.parent.right = this.left
         : this.parent.left = this.left;
     }
-    this.left.parent = this.parent;
+    if (this.left) 
+      this.left.parent = this.parent;
     this.parent = this.left;
     this.left = this.parent.right;
     this.parent.right = this;
