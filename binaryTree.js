@@ -4,9 +4,13 @@ const blankNode = {
   text: {
     val: ''
   },
+  HTMLclass: "BLACK null",
   connectors: {
-    opacity: 1,
-    "fill-opacity": 1
+    style: {
+      'stroke': '#ffffff',
+      "stroke-dasharray": "- .", //"", "-", ".", "-.", "-..", ". ", "- ", "--", "- .", "--.", "--.."
+      'arrow-start': 'classic-wide-long'
+    }
   }
 };
 class BinaryTree {
@@ -38,7 +42,6 @@ class BinaryTree {
   }
 
   printNodes(node) {
-    console.log("node", node && node.value);
     if (node === undefined) 
       return undefined;
     let jason = {
@@ -48,20 +51,14 @@ class BinaryTree {
       HTMLclass: node.color
       // innerHTML: node.value
     };
-    if (node.left || node.right) {
-      jason["children"] = [];
-      if (node.left) {
-        jason["children"].push(this.printNodes(node.left));
-      } else {
-        jason["children"].push(blankNode);
-      }
 
-      if (node.right) {
-        jason["children"].push(this.printNodes(node.right));
-      } else {
-        jason["children"].push(blankNode);
+    jason["children"] = [blankNode, blankNode];
+    if (node.left || node.right) {
+      if (node.left) 
+        jason["children"][0] = this.printNodes(node.left);
+      if (node.right) 
+        jason["children"][1] = this.printNodes(node.right);
       }
-    }
     return jason;
   }
 }

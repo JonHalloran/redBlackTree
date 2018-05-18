@@ -75,22 +75,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-let tree2 = new __WEBPACK_IMPORTED_MODULE_0__binaryTree__["a" /* default */]();
-tree2.addVertex(50);
+let tree = new __WEBPACK_IMPORTED_MODULE_0__binaryTree__["a" /* default */]();
+tree.addVertex(50);
+// tree.addVertex(44); tree.addVertex(94);
+tree.addVertex(3);
+// tree.addVertex(80);
+tree.addVertex(3);
 
 let button = document.getElementsByClassName('data')[0];
 button.addEventListener("click", () => {
   let value = Math.floor(Math.random(100) * 100);
+  newNode(value);
   console.log("newValue", value);
-  tree2.addVertex(value);
-  console.log(tree2.printNodes(tree2.root));
-  treeStructure["nodeStructure"] = tree2.printNodes(tree2.root);
+  tree.addVertex(value);
+  treeStructure["nodeStructure"] = tree.printNodes(tree.root);
   window.Treant(treeStructure);
 });
 
+let form = document.getElementsByClassName('add-node')[0];
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  newNode(e.target[0].value);
+});
+
+const newNode = (value) => {
+  tree.addVertex(value);
+  treeStructure["nodeStructure"] = tree.printNodes(tree.root);
+  window.Treant(treeStructure);
+};
+
 var treeStructure = {
   chart: {
-    container: "#OrganiseChart6",
+    container: "#red-black-tree",
     levelSeparation: 20,
     siblingSeparation: 5,
     subTeeSeparation: 5,
@@ -109,14 +125,7 @@ var treeStructure = {
     }
   },
 
-  nodeStructure: {
-    text: {
-      name: {
-        val: "50"
-      }
-    },
-    HTMLclass: "BLACK"
-  }
+  nodeStructure: tree.printNodes(tree.root)
 };
 
 window.treeStructure = treeStructure;
@@ -133,9 +142,13 @@ const blankNode = {
   text: {
     val: ''
   },
+  HTMLclass: "BLACK null",
   connectors: {
-    opacity: 1,
-    "fill-opacity": 1
+    style: {
+      'stroke': '#ffffff',
+      "stroke-dasharray": "- .", //"", "-", ".", "-.", "-..", ". ", "- ", "--", "- .", "--.", "--.."
+      'arrow-start': 'classic-wide-long'
+    }
   }
 };
 class BinaryTree {
@@ -167,7 +180,6 @@ class BinaryTree {
   }
 
   printNodes(node) {
-    console.log("node", node && node.value);
     if (node === undefined) 
       return undefined;
     let jason = {
@@ -177,20 +189,14 @@ class BinaryTree {
       HTMLclass: node.color
       // innerHTML: node.value
     };
-    if (node.left || node.right) {
-      jason["children"] = [];
-      if (node.left) {
-        jason["children"].push(this.printNodes(node.left));
-      } else {
-        jason["children"].push(blankNode);
-      }
 
-      if (node.right) {
-        jason["children"].push(this.printNodes(node.right));
-      } else {
-        jason["children"].push(blankNode);
+    jason["children"] = [blankNode, blankNode];
+    if (node.left || node.right) {
+      if (node.left) 
+        jason["children"][0] = this.printNodes(node.left);
+      if (node.right) 
+        jason["children"][1] = this.printNodes(node.right);
       }
-    }
     return jason;
   }
 }
@@ -220,7 +226,7 @@ class Vertex {
 
   get isRightChild() {
     return this.parent
-      ? this.parent.value < this.value
+      ? this.parent.right === this
       : false;
   }
 
@@ -313,6 +319,8 @@ class Vertex {
       if (this.uncle && this.uncle.color === "RED") {
         this.caseOne();
       } else {
+        console.log("self Right child", this.isRightChild, this.value, this.parent.value);
+        console.log("parent Right child", this.parent.isRightChild, this.parent.value, this.parent.parent.value);
         const rightLine = this.isRightChild && this.parent.isRightChild;
         const leftLine = !this.isRightChild && !this.parent.isRightChild;
         console.log(leftLine, rightLine);

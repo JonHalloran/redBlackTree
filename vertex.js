@@ -16,7 +16,7 @@ class Vertex {
 
   get isRightChild() {
     return this.parent
-      ? this.parent.value < this.value
+      ? this.parent.right === this
       : false;
   }
 
@@ -109,6 +109,8 @@ class Vertex {
       if (this.uncle && this.uncle.color === "RED") {
         this.caseOne();
       } else {
+        console.log("self Right child", this.isRightChild, this.value, this.parent.value);
+        console.log("parent Right child", this.parent.isRightChild, this.parent.value, this.parent.parent.value);
         const rightLine = this.isRightChild && this.parent.isRightChild;
         const leftLine = !this.isRightChild && !this.parent.isRightChild;
         console.log(leftLine, rightLine);
