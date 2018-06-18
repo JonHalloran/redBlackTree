@@ -1,15 +1,12 @@
 class Vertex {
   constructor(parent, value) {
-    console.log("parent", parent);
     this.parent = parent;
     this.value = value;
     this.color = "RED";
     this.left = undefined;
     this.right = undefined;
-    if (this.parent) 
-      console.log("preRed", this.parent.left);
-    }
-  
+  }
+
   get isRoot() {
     return this.parent === undefined;
   }
@@ -38,8 +35,30 @@ class Vertex {
     return this.right && this.left;
   }
 
+  addVertex(value) {
+    console.log("addVertex", value);
+    if (value < this.value) {
+      if (this.left) {
+        return this
+          .left
+          .addVertex(value);
+      } else {
+        this.left = new Vertex(this, value);
+        return this.left;
+      }
+    } else {
+      if (this.right) {
+        let toReturn = this.right.addVertex(value);
+        console.log("return", toReturn);
+        return toReturn;
+      } else {
+        this.right = new Vertex(this, value);
+        return this.right;
+      }
+    }
+  }
+
   leftRotate() {
-    console.log("leftRotate", this);
     if (this.parent) {
       this.isRightChild
         ? this.parent.right = this.right
@@ -56,106 +75,66 @@ class Vertex {
     }
   
   rightRotate() {
-    console.log("rightRotate", this);
+    console.log("right", this, this.left);
     if (this.parent) {
       this.isRightChild
         ? this.parent.right = this.left
         : this.parent.left = this.left;
     }
-    if (this.left) 
-      this.left.parent = this.parent;
+    this.left.parent = this.parent;
     this.parent = this.left;
     this.left = this.parent.right;
     this.parent.right = this;
     if (this.left) 
       this.left.parent = this;
-
     }
   
-  addVertex(value) {
-    if (value < this.value) {
-      if (this.left) {
-        this
-          .left
-          .addVertex(value);
-      } else {
-        this.left = new Vertex(this, value);
-        this
-          .left
-          .checkRed();
-      }
-
-    } else {
-      if (this.right) {
-        this
-          .right
-          .addVertex(value);
-      } else {
-        this.right = new Vertex(this, value);
-        this
-          .right
-          .checkRed();
-      }
-    }
-  }
-
   checkRed() {
-    console.log("checkRed", this.isRoot);
     if (this.isRoot) {
       // Case 0
       this.color = "BLACK";
     } else if (this.parent.color === "RED") {
-      console.log(this.uncle, "uncle");
       if (this.uncle && this.uncle.color === "RED") {
-        this.caseOne();
+        return this.caseOne();
       } else {
-        console.log("self Right child", this.isRightChild, this.value, this.parent.value);
-        console.log("parent Right child", this.parent.isRightChild, this.parent.value, this.parent.parent.value);
         const rightLine = this.isRightChild && this.parent.isRightChild;
         const leftLine = !this.isRightChild && !this.parent.isRightChild;
-        console.log(leftLine, rightLine);
         if (rightLine || leftLine) {
-          this.caseThree();
+          return this.caseThree();
         } else {
-          this.caseTwo();
+          return this.caseTwo();
         }
       }
+    } else {
+      return null;
     }
   }
 
   caseOne() {
-    console.log("CaseOne");
     // recolor only
     this.grandparent.color = "RED";
     this.uncle.color = "BLACK";
-    console.log("uncle ", this.uncle);
     this.parent.color = "BLACK";
-    this
+    return this
       .grandparent
       .checkRed();
   }
 
   caseTwo() {
-    console.log("caseTwo");
     if (this.isRightChild) {
       this
         .parent
         .leftRotate();
-      this
-        .left
-        .checkRed();
+      return this.left;
     } else {
       this
         .parent
         .rightRotate();
-      this
-        .right
-        .checkRed();
+      return this.right;
     }
   }
 
   caseThree() {
-    console.log("caseThree");
     if (this.parent.isRightChild) {
       this
         .grandparent
@@ -169,6 +148,7 @@ class Vertex {
     this.parent.color = "BLACK";
     this.parent.left.color = "RED";
     this.parent.right.color = "RED";
+    return null;
   }
 
 }

@@ -7,22 +7,23 @@
 
 <body>
   <form class="add-node">
-    <input type="number" name="new-node"></input>
-    <input type="submit" value="Submit">
+    <input type="number" class="new-node-input" name="new-node"></input>
+    <input type="submit" class="new-node-submit" value="Submit">
   </form>
-  <button class="data">Random</button>
+  <button class="rand-node">Random</button>
+  <p id='message'></p>
   <div class="chart" id="red-black-tree"></div>
   <script src="vendor/raphael.js"></script>
 
   <script src="bundle.js"></script>
-  <script>
+  <!-- <script>
     new Treant(treeStructure);
-  </script>
+  </script> -->
 
 </body>
 <footer>
   <script src='http://d3js.org/d3.v3.min.js'></script>
-  <script src='./bundle.js'></script>
+  <!-- <script src='./bundle.js'></script> -->
 
 </footer>
 

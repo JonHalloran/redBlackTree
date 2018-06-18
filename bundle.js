@@ -76,33 +76,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 let tree = new __WEBPACK_IMPORTED_MODULE_0__binaryTree__["a" /* default */]();
-tree.addVertex(50);
-// tree.addVertex(44); tree.addVertex(94);
-tree.addVertex(3);
-// tree.addVertex(80);
-tree.addVertex(3);
 
-let button = document.getElementsByClassName('data')[0];
-button.addEventListener("click", () => {
-  let value = Math.floor(Math.random(100) * 100);
-  newNode(value);
-  console.log("newValue", value);
-  tree.addVertex(value);
-  treeStructure["nodeStructure"] = tree.printNodes(tree.root);
-  window.Treant(treeStructure);
-});
-
-let form = document.getElementsByClassName('add-node')[0];
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  newNode(e.target[0].value);
-});
-
-const newNode = (value) => {
-  tree.addVertex(value);
-  treeStructure["nodeStructure"] = tree.printNodes(tree.root);
-  window.Treant(treeStructure);
-};
 
 var treeStructure = {
   chart: {
@@ -130,6 +104,55 @@ var treeStructure = {
 
 window.treeStructure = treeStructure;
 
+tree.addVertex(50);
+// tree.addVertex(44); tree.addVertex(94);
+tree.addVertex(3);
+// tree.addVertex(80);
+tree.addVertex(3);
+
+
+let button = document.getElementsByClassName('rand-node')[0];
+button.addEventListener("click", () => {
+  let value = Math.floor(Math.random(100) * 100);
+  newNode(value);
+  // // tree.addVertex(value);
+  treeStructure["nodeStructure"] = tree.printNodes(tree.root);
+  window.Treant(treeStructure);
+});
+
+let form = document.getElementsByClassName('add-node')[0];
+form.addEventListener("submit", (e) => {
+
+  e.preventDefault();
+  e.stopPropagation();
+  const value = e.target[0].value;
+  if (value === 0) {
+    setMessage('Please enter a number');
+  } else {
+    newNode(value);
+    // e.target[0].value = '';
+  }
+});
+
+const newNode = (value) => {
+  let addNode = tree.addVertex(value);
+  let randButton = document.getElementsByClassName('rand-node')[0];
+  randButton.disabled = true;
+  let subButton = document.getElementsByClassName('new-node-submit')[0];
+  subButton.disabled = true;
+  // console.log(addNode);
+  // treeStructure["nodeStructure"] = tree.printNodes(tree.root);
+  // window.Treant(treeStructure);
+  // const nodeInput = document.getElementsByClassName('new-node-input')[0];
+  // nodeInput.value = 0;
+
+};
+
+const setMessage = (msg) => {
+  const message = document.getElementById('message');
+  message.innerHTML = msg;
+};
+
 /***/ }),
 /* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -156,20 +179,46 @@ class BinaryTree {
     this.root = undefined;
     this.left = undefined;
     this.right = undefined;
+    this.balance = this
+      .balance
+      .bind(this);
   }
 
   addVertex(value) {
+    // debugger;
+    console.log("addVertex");
     if (!this.root) {
       this.root = new __WEBPACK_IMPORTED_MODULE_0__vertex__["a" /* default */](undefined, value);
       this
         .root
         .checkRed();
     } else {
-      this
+      let returned = this
         .root
         .addVertex(value);
+      console.log("returned", returned);
+      let that = this;
+      setTimeout(() => that.balance(returned), 2000);
     }
     this.newRoot(this.root);
+  }
+
+  balance(node) {
+    console.log("balance before", node);
+    node = node.checkRed(node);
+    console.log("balance after", node);
+    this.newRoot(this.root);
+    window.treeStructure["nodeStructure"] = this.printNodes(this.root);
+    window.Treant(window.treeStructure);
+    if (node) {
+      console.log("if", node);
+      setTimeout(() => this.balance(node), 3000);
+    } else {
+      let randButton = document.getElementsByClassName('rand-node')[0];
+      randButton.disabled = false;
+      let subButton = document.getElementsByClassName('new-node-submit')[0];
+      subButton.disabled = false;
+    }
   }
 
   newRoot(node) {
@@ -199,6 +248,7 @@ class BinaryTree {
       }
     return jason;
   }
+
 }
 
 /* harmony default export */ __webpack_exports__["a"] = (BinaryTree);
@@ -210,16 +260,13 @@ class BinaryTree {
 "use strict";
 class Vertex {
   constructor(parent, value) {
-    console.log("parent", parent);
     this.parent = parent;
     this.value = value;
     this.color = "RED";
     this.left = undefined;
     this.right = undefined;
-    if (this.parent) 
-      console.log("preRed", this.parent.left);
-    }
-  
+  }
+
   get isRoot() {
     return this.parent === undefined;
   }
@@ -248,8 +295,30 @@ class Vertex {
     return this.right && this.left;
   }
 
+  addVertex(value) {
+    console.log("addVertex", value);
+    if (value < this.value) {
+      if (this.left) {
+        return this
+          .left
+          .addVertex(value);
+      } else {
+        this.left = new Vertex(this, value);
+        return this.left;
+      }
+    } else {
+      if (this.right) {
+        let toReturn = this.right.addVertex(value);
+        console.log("return", toReturn);
+        return toReturn;
+      } else {
+        this.right = new Vertex(this, value);
+        return this.right;
+      }
+    }
+  }
+
   leftRotate() {
-    console.log("leftRotate", this);
     if (this.parent) {
       this.isRightChild
         ? this.parent.right = this.right
@@ -266,106 +335,66 @@ class Vertex {
     }
   
   rightRotate() {
-    console.log("rightRotate", this);
+    console.log("right", this, this.left);
     if (this.parent) {
       this.isRightChild
         ? this.parent.right = this.left
         : this.parent.left = this.left;
     }
-    if (this.left) 
-      this.left.parent = this.parent;
+    this.left.parent = this.parent;
     this.parent = this.left;
     this.left = this.parent.right;
     this.parent.right = this;
     if (this.left) 
       this.left.parent = this;
-
     }
   
-  addVertex(value) {
-    if (value < this.value) {
-      if (this.left) {
-        this
-          .left
-          .addVertex(value);
-      } else {
-        this.left = new Vertex(this, value);
-        this
-          .left
-          .checkRed();
-      }
-
-    } else {
-      if (this.right) {
-        this
-          .right
-          .addVertex(value);
-      } else {
-        this.right = new Vertex(this, value);
-        this
-          .right
-          .checkRed();
-      }
-    }
-  }
-
   checkRed() {
-    console.log("checkRed", this.isRoot);
     if (this.isRoot) {
       // Case 0
       this.color = "BLACK";
     } else if (this.parent.color === "RED") {
-      console.log(this.uncle, "uncle");
       if (this.uncle && this.uncle.color === "RED") {
-        this.caseOne();
+        return this.caseOne();
       } else {
-        console.log("self Right child", this.isRightChild, this.value, this.parent.value);
-        console.log("parent Right child", this.parent.isRightChild, this.parent.value, this.parent.parent.value);
         const rightLine = this.isRightChild && this.parent.isRightChild;
         const leftLine = !this.isRightChild && !this.parent.isRightChild;
-        console.log(leftLine, rightLine);
         if (rightLine || leftLine) {
-          this.caseThree();
+          return this.caseThree();
         } else {
-          this.caseTwo();
+          return this.caseTwo();
         }
       }
+    } else {
+      return null;
     }
   }
 
   caseOne() {
-    console.log("CaseOne");
     // recolor only
     this.grandparent.color = "RED";
     this.uncle.color = "BLACK";
-    console.log("uncle ", this.uncle);
     this.parent.color = "BLACK";
-    this
+    return this
       .grandparent
       .checkRed();
   }
 
   caseTwo() {
-    console.log("caseTwo");
     if (this.isRightChild) {
       this
         .parent
         .leftRotate();
-      this
-        .left
-        .checkRed();
+      return this.left;
     } else {
       this
         .parent
         .rightRotate();
-      this
-        .right
-        .checkRed();
+      return this.right;
     }
   }
 
   caseThree() {
-    console.log("caseThree");
     if (this.parent.isRightChild) {
       this
         .grandparent
@@ -379,6 +408,7 @@ class Vertex {
     this.parent.color = "BLACK";
     this.parent.left.color = "RED";
     this.parent.right.color = "RED";
+    return null;
   }
 
 }
