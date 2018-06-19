@@ -1,30 +1,82 @@
 <html>
 
 <head>
+  <!-- <link rel="stylesheet" type="text/css" href="reset.css"> -->
   <link rel="stylesheet" type="text/css" href="index.css">
   <link rel="stylesheet" type="text/css" href="Treant.css">
+  <link rel="stylesheet" type="text/css" href="svg.css">
 </head>
 
 <body>
+  <h1 class="title">Red-Black Tree Tutorial </h1>
+
   <form class="add-node">
     <input type="number" class="new-node-input" name="new-node"></input>
     <input type="submit" class="new-node-submit" value="Submit">
   </form>
+
   <button class="rand-node">Random</button>
-  <p id='message'></p>
-  <div class="chart" id="red-black-tree"></div>
-  <script src="vendor/raphael.js"></script>
-
-  <script src="bundle.js"></script>
-  <!-- <script>
-    new Treant(treeStructure);
-  </script> -->
-
+  <main>
+    <div class="information">
+      <h3>Rules:</h3>
+      <ul>
+        <li>Each node is either red or black</li>
+        <li>The root must always be black</li>
+        <li>A red node can never have a red child</li>
+        <li>All nodes start as red</li>
+      </ul>
+    </div>
+    <div class="chart" id="red-black-tree"></div>
+    <div class="cases">
+      <ul>
+        <li id="case0" class="hidden">
+          <h4>Case 0:</h4>
+          <p>Root is red</p>
+          <ol>
+            <li>Change root color to black</li>
+          </ol>
+        </li>
+        <li id="case1" class="hidden">
+          <h4>Case 1:</h4>
+          <p>Parent is black</p>
+          <ol>
+            <li>No issue</li>
+          </ol>
+        </li>
+        <li id="case2" class="hidden">
+          <h4>Case 2</h4>
+          <p>Parent and uncle red.</p>
+          <ol>
+            <li>Change parent and uncle's color to black.</li>
+            <li>Change grandparent's color to red</li>
+            <li>Recheck from grandparent</li>
+          </ol>
+        </li>
+        <li id="case3" class="hidden">
+          <h4>Case 3</h4>
+          <p>Parent is red. Grandparent and uncle are black. Current node on "inside" of parent.</p>
+          <ol>
+            <li>Rotate around parent from direction current node -> parent</li>
+            <li>Recheck ex-parent, now child of node</li>
+          </ol>
+        </li>
+        <li id="case4" class="hidden">
+          <h4>Case 4</h4>
+          <p>Parent is red. Grandparent and uncle are black. Current node on "outside" of parent.</p>
+          <ol>
+            <li>Rotate around grandparent from direction parent -> grandparent</li>
+            <li>Recheck ex-parent, now child of node</li>
+            <li>Previous grandparent's color goes to red</li>
+            <li>Parent's color goes to black</li>
+          </ol>
+        </li>
+      </ul>
+    </div>
+  </main>
 </body>
 <footer>
-  <script src='http://d3js.org/d3.v3.min.js'></script>
-  <!-- <script src='./bundle.js'></script> -->
-
+  <script src="vendor/raphael.js"></script>
+  <script src="bundle.js"></script>
 </footer>
 
 </html>

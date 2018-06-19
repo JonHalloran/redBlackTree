@@ -48,7 +48,9 @@ class Vertex {
       }
     } else {
       if (this.right) {
-        let toReturn = this.right.addVertex(value);
+        let toReturn = this
+          .right
+          .addVertex(value);
         console.log("return", toReturn);
         return toReturn;
       } else {
@@ -112,6 +114,10 @@ class Vertex {
 
   caseOne() {
     // recolor only
+    document
+      .getElementById('case1')
+      .classList
+      .remove('display-none');
     this.grandparent.color = "RED";
     this.uncle.color = "BLACK";
     this.parent.color = "BLACK";

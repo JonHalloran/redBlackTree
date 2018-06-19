@@ -1,14 +1,24 @@
-.node {
-  fill: #ccc;
-  stroke: #fff;
-  stroke-width: 2px;
+.title {
+  text-align: center;
+  padding-top: 10px;
+  height: 60px;
+  align-content: center
 }
 
-.link {
-  stroke: #777;
-  stroke-width: 2px;
+.hidden {
+  display: none;
 }
 
-/* body {
-  background-color: red;
-} */
+main {
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+}
+
+h4 {
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
