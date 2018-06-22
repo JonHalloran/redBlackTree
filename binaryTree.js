@@ -24,7 +24,6 @@ class BinaryTree {
   }
 
   addVertex(value) {
-    // debugger;
     console.log("addVertex");
     if (!this.root) {
       this.root = new Vertex(undefined, value);
@@ -35,7 +34,6 @@ class BinaryTree {
       let returned = this
         .root
         .addVertex(value);
-      console.log("returned", returned);
       let that = this;
       setTimeout(() => that.balance(returned), 2000);
     }
